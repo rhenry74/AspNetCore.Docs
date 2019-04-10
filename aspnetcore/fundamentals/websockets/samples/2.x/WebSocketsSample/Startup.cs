@@ -71,6 +71,8 @@ namespace EchoApp
 #endif
 
             #region AcceptWebSocket
+
+            //TODO demo code, will remove
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path == "/ws")
@@ -91,10 +93,19 @@ namespace EchoApp
                 }
 
             });
-#endregion
+
+            var nurseServer = new NurseServer("/nurse");
+            app.Use(async (context, next) => await nurseServer.Start(context, next));
+
+            var schedServer = new SchedulerServer("/scheduler");
+            app.Use(async (context, next) => await schedServer.Start(context, next));
+
+            #endregion
             app.UseFileServer();
         }
-#region Echo
+
+        //TODO demo code, will remove
+        #region Echo
         private async Task Echo(HttpContext context, WebSocket webSocket)
         {
             var buffer = new byte[1024 * 4];
